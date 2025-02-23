@@ -2,8 +2,10 @@ import javax.swing.JPanel;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Color;
+import java.awt.event.KeyListener;
+import java.awt.event.KeyEvent;
 
-public class GamePanel extends JPanel implements Runnable {
+public class GamePanel extends JPanel implements Runnable, KeyListener {
     public static final int ANCHO = 800;
     public static final int ALTO = 600;
     private Thread hilo;
@@ -15,7 +17,7 @@ public class GamePanel extends JPanel implements Runnable {
         setPreferredSize(new Dimension(ANCHO, ALTO));
         setBackground(Color.BLACK);
         setFocusable(true);
-        requestFocus();
+        addKeyListener(this);
 
         // El jugador empieza en la parte inferior de la pantalla
         jugador = new Player(ANCHO / 2 - 20, ALTO - 60);
@@ -52,4 +54,23 @@ public class GamePanel extends JPanel implements Runnable {
         // Dibuja el jugador
         jugador.dibujar(g);
     }
+
+    // Métodos del KeyListener para las teclas del teclado
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int tecla = e.getKeyCode();
+        if(tecla == KeyEvent.VK_LEFT) {
+            jugador.moverIzquierda();
+        }
+        if(tecla == KeyEvent.VK_RIGHT) {
+            jugador.moverDerecha(ANCHO);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent e) {
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
 }

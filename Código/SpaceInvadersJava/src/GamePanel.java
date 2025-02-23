@@ -9,11 +9,16 @@ public class GamePanel extends JPanel implements Runnable {
     private Thread hilo;
     private boolean jugando;
 
+    private Player jugador;
+
     public GamePanel() {
         setPreferredSize(new Dimension(ANCHO, ALTO));
         setBackground(Color.BLACK);
         setFocusable(true);
         requestFocus();
+
+        // El jugador empieza en la parte inferior de la pantalla
+        jugador = new Player(ANCHO / 2 - 20, ALTO - 60);
     }
 
     public void iniciarJuego() {
@@ -37,15 +42,14 @@ public class GamePanel extends JPanel implements Runnable {
         }
     }
 
-    // Estado del juego
     private void actualizar() {
+
     }
 
-    // Dibujado del juego
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        g.setColor(Color.WHITE);
-        g.drawString("Space Invaders", 20, 20);
+        // Dibuja el jugador
+        jugador.dibujar(g);
     }
 }

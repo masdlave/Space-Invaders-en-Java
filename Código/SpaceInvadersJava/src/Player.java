@@ -34,7 +34,7 @@ public class Player {
     public Rectangle obtenerRectangulo() {
         return new Rectangle(x, y, ancho, alto);
     }
-    
+
     public int getX() { return x; }
     public int getY() { return y; }
 }

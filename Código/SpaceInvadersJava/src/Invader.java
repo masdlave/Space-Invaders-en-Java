@@ -39,5 +39,8 @@ public class Invader {
 
     public int getX() { return x; }
     public int getAncho() { return ancho; }
+    public int getY() { return y; }
+    public int getAlto() { return alto; }
+
 
 }

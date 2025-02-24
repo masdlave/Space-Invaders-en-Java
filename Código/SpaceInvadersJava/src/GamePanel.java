@@ -17,15 +17,28 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     private ArrayList<Invader> invasores;
     private ArrayList<Bullet> balas;
 
+    private boolean juegoTerminado;
+    private boolean victoria;
+
     public GamePanel() {
         setPreferredSize(new Dimension(ANCHO, ALTO));
         setBackground(Color.BLACK);
         setFocusable(true);
         addKeyListener(this);
 
+        iniciarJuego();
+    }
+
+    public void iniciarJuego() {
         jugador = new Player(ANCHO / 2 - 20, ALTO - 60);
         inicializarInvasores();
         balas = new ArrayList<>();
+        juegoTerminado = false;
+        victoria = false;
+        jugando = true;
+
+        hilo = new Thread(this);
+        hilo.start();
     }
 
     private void inicializarInvasores() {
@@ -44,21 +57,16 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
     }
 
-    public void iniciarJuego() {
-        jugando = true;
-        hilo = new Thread(this);
-        hilo.start();
-    }
-
     @Override
     public void run() {
-
         while (jugando) {
-            actualizar();
+            if (!juegoTerminado) {
+                actualizar();
+            }
             repaint();
 
             try {
-                Thread.sleep(17); // 60 FPS
+                Thread.sleep(17);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -66,6 +74,12 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     private void actualizar() {
+        if (invasores.isEmpty()) {
+            // Si no quedan invasores, el jugador gana
+            juegoTerminado = true;
+            victoria = true;
+            return;
+        }
 
         boolean cambiarDireccion = false;
         for (Invader inv : invasores) {
@@ -83,6 +97,18 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
         for (Invader inv : invasores) {
             inv.actualizar();
+
+            if (inv.getY() + inv.getAlto() >= ALTO) {
+                juegoTerminado = true;
+                victoria = false;
+                return;
+            }
+
+            if (inv.obtenerRectangulo().intersects(jugador.obtenerRectangulo())) {
+                juegoTerminado = true;
+                victoria = false;
+                return;
+            }
         }
 
         Iterator<Bullet> iterBala = balas.iterator();
@@ -109,38 +135,53 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Dibuja al jugador
-        jugador.dibujar(g);
-        // Dibuja cada invasor
-        for (Invader inv : invasores) {
-            inv.dibujar(g);
-        }
-        // Dibuja cada bala
-        for (Bullet b : balas) {
-            b.dibujar(g);
+
+        if (juegoTerminado) {
+            g.setColor(Color.WHITE);
+            g.setFont(g.getFont().deriveFont(30f));
+            if (victoria) {
+                g.drawString("¡Has ganado!", ANCHO / 2 - 100, ALTO / 2);
+            } else {
+                g.drawString("¡Has perdido!", ANCHO / 2 - 100, ALTO / 2);
+            }
+            g.setFont(g.getFont().deriveFont(20f));
+            g.drawString("Presiona 'R' para reiniciar", ANCHO / 2 - 120, ALTO / 2 + 40);
+        } else {
+            jugador.dibujar(g);
+            for (Invader inv : invasores) {
+                inv.dibujar(g);
+            }
+            for (Bullet b : balas) {
+                b.dibujar(g);
+            }
         }
     }
 
     @Override
     public void keyPressed(KeyEvent e) {
         int tecla = e.getKeyCode();
-        if (tecla == KeyEvent.VK_LEFT) {
-            jugador.moverIzquierda();
+
+        if (juegoTerminado && tecla == KeyEvent.VK_R) {
+            iniciarJuego();
         }
-        if (tecla == KeyEvent.VK_RIGHT) {
-            jugador.moverDerecha(ANCHO);
-        }
-        if (tecla == KeyEvent.VK_SPACE) {
-            int posX = jugador.getX() + 20 - 2; // Centra la bala en la nave
-            int posY = jugador.getY();
-            balas.add(new Bullet(posX, posY));
+
+        if (!juegoTerminado) {
+            if (tecla == KeyEvent.VK_LEFT) {
+                jugador.moverIzquierda();
+            }
+            if (tecla == KeyEvent.VK_RIGHT) {
+                jugador.moverDerecha(ANCHO);
+            }
+            if (tecla == KeyEvent.VK_SPACE) {
+                int posX = jugador.getX() + 20 - 2;
+                int posY = jugador.getY();
+                balas.add(new Bullet(posX, posY));
+            }
         }
     }
 
     @Override
-    public void keyReleased(KeyEvent e) {
-
-    }
+    public void keyReleased(KeyEvent e) {}
 
     @Override
     public void keyTyped(KeyEvent e) {}

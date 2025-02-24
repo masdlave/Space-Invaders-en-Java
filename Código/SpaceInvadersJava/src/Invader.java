@@ -36,4 +36,8 @@ public class Invader {
     public Rectangle obtenerRectangulo() {
         return new Rectangle(x, y, ancho, alto);
     }
+
+    public int getX() { return x; }
+    public int getAncho() { return ancho; }
+
 }

@@ -17,6 +17,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     private ArrayList<Invader> invasores;
     private ArrayList<Bullet> balas;
 
+    // Puntos y vidas
+    private int score;
+    private int vidas;
+
     private boolean juegoTerminado;
     private boolean victoria;
 
@@ -36,6 +40,10 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         juegoTerminado = false;
         victoria = false;
         jugando = true;
+
+        // Puntos y vidas
+        score = 0;
+        vidas = 3;
 
         hilo = new Thread(this);
         hilo.start();
@@ -74,8 +82,8 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     private void actualizar() {
+
         if (invasores.isEmpty()) {
-            // Si no quedan invasores, el jugador gana
             juegoTerminado = true;
             victoria = true;
             return;
@@ -99,16 +107,22 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             inv.actualizar();
 
             if (inv.getY() + inv.getAlto() >= ALTO) {
-                juegoTerminado = true;
-                victoria = false;
-                return;
+                vidas--;
+                inicializarInvasores();
+                break;
             }
 
             if (inv.obtenerRectangulo().intersects(jugador.obtenerRectangulo())) {
-                juegoTerminado = true;
-                victoria = false;
-                return;
+                vidas--;
+                inicializarInvasores();
+                break;
             }
+        }
+
+        if (vidas <= 0) {
+            juegoTerminado = true;
+            victoria = false;
+            return;
         }
 
         Iterator<Bullet> iterBala = balas.iterator();
@@ -125,6 +139,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
                     if (b.obtenerRectangulo().intersects(inv.obtenerRectangulo())) {
                         iterInv.remove();
                         iterBala.remove();
+                        score += 10;
                         break;
                     }
                 }
@@ -154,6 +169,11 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
             for (Bullet b : balas) {
                 b.dibujar(g);
             }
+            // Dibuja el puntaje y las vidas
+            g.setColor(Color.WHITE);
+            g.setFont(g.getFont().deriveFont(18f));
+            g.drawString("Puntaje: " + score, 10, 20);
+            g.drawString("Vidas: " + vidas, 10, 40);
         }
     }
 

@@ -53,7 +53,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     @Override
     public void run() {
 
-        while(jugando) {
+        while (jugando) {
             actualizar();
             repaint();
 
@@ -66,23 +66,37 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     private void actualizar() {
+
+        boolean cambiarDireccion = false;
+        for (Invader inv : invasores) {
+            if (inv.getX() <= 0 || inv.getX() + inv.getAncho() >= ANCHO) {
+                cambiarDireccion = true;
+                break;
+            }
+        }
+
+        if (cambiarDireccion) {
+            for (Invader inv : invasores) {
+                inv.cambiarDireccion();
+            }
+        }
+
         for (Invader inv : invasores) {
             inv.actualizar();
         }
 
-        // Colisiones y balas
         Iterator<Bullet> iterBala = balas.iterator();
-        while(iterBala.hasNext()){
+        while (iterBala.hasNext()) {
             Bullet b = iterBala.next();
             b.actualizar();
 
-            if(b.getY() < 0) {
+            if (b.getY() < 0) {
                 iterBala.remove();
             } else {
                 Iterator<Invader> iterInv = invasores.iterator();
-                while(iterInv.hasNext()){
+                while (iterInv.hasNext()) {
                     Invader inv = iterInv.next();
-                    if(b.obtenerRectangulo().intersects(inv.obtenerRectangulo())){ // Al detectar colisión, se elimina tanto el invasor como la bala
+                    if (b.obtenerRectangulo().intersects(inv.obtenerRectangulo())) {
                         iterInv.remove();
                         iterBala.remove();
                         break;
@@ -107,18 +121,17 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
         }
     }
 
-    // Crea una nueva bala desde la posición del jugador
     @Override
     public void keyPressed(KeyEvent e) {
         int tecla = e.getKeyCode();
-        if(tecla == KeyEvent.VK_LEFT) {
+        if (tecla == KeyEvent.VK_LEFT) {
             jugador.moverIzquierda();
         }
-        if(tecla == KeyEvent.VK_RIGHT) {
+        if (tecla == KeyEvent.VK_RIGHT) {
             jugador.moverDerecha(ANCHO);
         }
-        if(tecla == KeyEvent.VK_SPACE) {
-            int posX = jugador.getX() + 20 - 2;
+        if (tecla == KeyEvent.VK_SPACE) {
+            int posX = jugador.getX() + 20 - 2; // Centra la bala en la nave
             int posY = jugador.getY();
             balas.add(new Bullet(posX, posY));
         }
@@ -126,6 +139,7 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
+
     }
 
     @Override

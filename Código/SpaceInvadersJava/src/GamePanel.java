@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Color;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 
 public class GamePanel extends JPanel implements Runnable, KeyListener {
     public static final int ANCHO = 800;
@@ -13,14 +14,32 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
 
     private Player jugador;
 
+    private ArrayList<Invader> invasores;
+
     public GamePanel() {
         setPreferredSize(new Dimension(ANCHO, ALTO));
         setBackground(Color.BLACK);
         setFocusable(true);
         addKeyListener(this);
 
-        // El jugador empieza en la parte inferior de la pantalla
         jugador = new Player(ANCHO / 2 - 20, ALTO - 60);
+        inicializarInvasores();
+    }
+
+    private void inicializarInvasores() {
+        invasores = new ArrayList<>();
+        int filas = 3;
+        int columnas = 8;
+        int espacioX = 50;
+        int espacioY = 40;
+
+        for (int fila = 0; fila < filas; fila++) {
+            for (int col = 0; col < columnas; col++) {
+                int posX = 50 + col * espacioX;
+                int posY = 30 + fila * espacioY;
+                invasores.add(new Invader(posX, posY));
+            }
+        }
     }
 
     public void iniciarJuego() {
@@ -45,14 +64,20 @@ public class GamePanel extends JPanel implements Runnable, KeyListener {
     }
 
     private void actualizar() {
-
+        for (Invader inv : invasores) {
+            inv.actualizar();
+        }
     }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
-        // Dibuja el jugador
+        // Dibuja al jugador
         jugador.dibujar(g);
+        // Dibuja cada invasor
+        for (Invader inv : invasores) {
+            inv.dibujar(g);
+        }
     }
 
     // Métodos del KeyListener para las teclas del teclado

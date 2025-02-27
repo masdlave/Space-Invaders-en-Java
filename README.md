@@ -1,5 +1,6 @@
-# Space Invaders en Java
+<p align="center"> <img src="img-readme/masdlave-SpaceInvaders.png" width="70%" /> </p>
 
+# Space Invaders en Java
 ### ¿Qué es Space Invaders?
 
 `Space Invaders` es un clásico juego arcade, originalmente lanzado en 1978. Desarrollado en Java, este proyecto tiene como objetivo recrear la experiencia lúdica del juego original, ofreciendo a la vez un recurso educativo para el aprendizaje de conceptos de programación, diseño de juegos y manejo de eventos gráficos.
@@ -28,14 +29,10 @@ El repositorio se organiza en las siguientes carpetas y archivos principales:
 3. **Ejecución del juego**
 
    Normalmente, presionando `F5` se ejecuta automáticamente. Si esto no funciona, pruebe a ejecutarlo desde su botón de "Run":
-   [Imagen de referencia]
+   <p align="center"> <img src="img-readme/run-space-invaders.png"/> </p>
 
----
-
-## Capturas de pantalla
-[Imagen de la primera captura]
-[Imagen de la segunda captura]
-[Imagen de la tercera captura]
+<h1 align="center"> Juego </h1>
+<p align="center"> <img src="img-readme/captura.png" width="60%"/> </p>
 
 #### Créditos
 - **Autor:** [@masdlave](https://github.com/masdlave) | Maria Salazar

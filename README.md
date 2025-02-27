@@ -12,6 +12,9 @@ El repositorio se organiza en las siguientes carpetas y archivos principales:
 - **Lessons**  
   Incluye recursos educativos y ejemplos prácticos relacionados con el desarrollo del juego, proporcionados por Davide Grappolo. Esta carpeta puede contener lecciones, notas y documentación adicional que facilitan la comprensión y extensión del proyecto.
 
+> [!NOTE]
+> **El juego está incompleto**. Falta añadir los efectos visuales y sonidos.
+
 ### Requisitos
 
 - **Java**: Se recomienda utilizar JDK 8 o una versión superior.
